@@ -1,0 +1,202 @@
+SELECT 
+    CAST(EMPLOYEE_ID AS VARCHAR(10)) + '-' + FIRST_NAME + ' ' + LAST_NAME AS FullName
+FROM Employees;
+
+
+UPDATE Employees
+SET PHONE_NUMBER = REPLACE(PHONE_NUMBER, '124', '999');
+
+SELECT EMPLOYEE_ID, PHONE_NUMBER, REPLACE(PHONE_NUMBER, '124', '999') AS UpdatedNumber
+FROM Employees;
+
+
+SELECT 
+    FIRST_NAME,
+    LEN(FIRST_NAME) AS NameLength
+FROM Employees
+WHERE FIRST_NAME LIKE 'A%' OR FIRST_NAME LIKE 'J%' OR FIRST_NAME LIKE 'M%'
+ORDER BY FIRST_NAME;
+
+
+SELECT 
+    MANAGER_ID,
+    SUM(SALARY) AS TotalSalary
+FROM Employees
+GROUP BY MANAGER_ID;
+
+
+SELECT 
+    Year,
+    GREATEST(Max1, Max2, Max3) AS HighestValue
+FROM TestMax;
+SELECT 
+    Year,
+    CASE 
+        WHEN Max1 >= Max2 AND Max1 >= Max3 THEN Max1
+        WHEN Max2 >= Max1 AND Max2 >= Max3 THEN Max2
+        ELSE Max3
+    END AS HighestValue
+FROM TestMax;
+
+SELECT *
+FROM Cinema
+WHERE Id % 2 = 1
+  AND Description <> 'boring';
+SELECT *
+FROM SingleOrder
+ORDER BY CASE WHEN Id = 0 THEN 1 ELSE 0 END, Id;
+SELECT 
+    COALESCE(Column1, Column2, Column3, Column4) AS FirstNonNull
+FROM Person;
+
+UPDATE Employees
+SET PHONE_NUMBER = REPLACE(PHONE_NUMBER, '.', '');
+
+SELECT 
+    UPPER(LEFT(FIRST_NAME, 1)) + LOWER(SUBSTRING(FIRST_NAME, 2, LEN(FIRST_NAME))) AS ProperFirst,
+    UPPER(LEFT(LAST_NAME, 1)) + LOWER(SUBSTRING(LAST_NAME, 2, LEN(LAST_NAME))) AS ProperLast
+FROM Employees;
+
+
+SELECT 
+    JOB_ID,
+    MAX(SALARY) AS MaxSalary
+FROM Employees
+GROUP BY JOB_ID;
+
+
+SELECT 
+    DEPARTMENT_ID,
+    AVG(SALARY) AS AvgSalary
+FROM Employees
+GROUP BY DEPARTMENT_ID
+HAVING AVG(SALARY) > 5000;
+
+
+SELECT 
+    FIRST_NAME + ' ' + LAST_NAME AS FullName,
+    LEN(FIRST_NAME + LAST_NAME) AS NameLength
+FROM Employees
+WHERE LEN(FIRST_NAME + LAST_NAME) > 12;
+
+
+SELECT 
+    BIRTH_DATE,
+    YEAR(BIRSELECT *
+FROM Employees e
+WHERE SALARY = (
+    SELECT MAX(SALARY)
+    FROM Employees
+    WHERE DEPARTMENT_ID = e.DEPARTMENT_ID
+);
+TH_DATE) AS BirthYear,
+    MONTH(BIRTH_DATE) AS BirthMonth,
+    DAY(BIRTH_DATE) AS BirthDay
+FROM EmployeeData;
+
+
+SELECT *
+FROM Employees
+WHERE EMAIL LIKE '%@gmail.com';
+
+
+SELECT 
+    FIRST_NAME, LAST_NAME, BIRTH_DATE,
+    DATEDIFF(YEAR, BIRTH_DATE, GETDATE()) AS Age
+FROM EmployeeData
+WHERE DATEDIFF(YEAR, BIRTH_DATE, GETDATE()) > 40;
+
+
+SELECT *
+FROM Employees
+WHERE LOWER(FIRST_NAME) LIKE '%an%';
+
+
+SELECT 
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    CASE 
+        WHEN SALARY > (SELECT AVG(SALARY) FROM Employees) THEN 'Above Average'
+        ELSE 'Below Average'
+    END AS SalaryLevel
+FROM Employees;
+
+
+SELECT 
+    DEPARTMENT_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY
+FROM (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY DEPARTMENT_ID ORDER BY SALARY DESC) AS rn
+    FROM Employees
+) t
+WHERE rn <= 3;
+
+
+SELECT 
+    FIRST_NAME,
+    LAST_NAME,
+    REVERSE(FIRST_NAME + ' ' + LAST_NAME) AS ReversedName
+FROM Employees;
+
+
+SELECT 
+    FIRST_NAME,
+    JOB_ID,
+    SALARY,
+    SALARY - AVG(SALARY) OVER (PARTITION BY JOB_ID) AS DiffFromAvg
+FROM Employees;
+
+
+SELECT TOP 1
+    FIRST_NAME,
+    LAST_NAME,
+    LEN(FIRST_NAME + LAST_NAME) AS NameLength
+FROM Employees
+ORDER BY LEN(FIRST_NAME + LAST_NAME) DESC;
+
+
+SELECT 
+    DEPARTMENT_ID,
+    COUNT(*) AS AboveAvgCount
+FROM Employees e
+WHERE SALARY > (
+    SELECT AVG(SALARY)
+    FROM Employees
+    WHERE DEPARTMENT_ID = e.DEPARTMENT_ID
+)
+GROUP BY DEPARTMENT_ID;
+
+
+SELECT TOP 1 
+    JOB_ID,
+    COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY JOB_ID
+ORDER BY COUNT(*) DESC;
+
+
+SELECT 
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    SALARY * 1.10 AS IncreasedSalary
+FROM Employees;
+
+
+SELECT 
+    DEPARTMENT_ID,
+    MIN(SALARY) AS MinSalary,
+    MAX(SALARY) AS MaxSalary
+FROM Employees
+GROUP BY DEPARTMENT_ID;
+
+
+SELECT *
+FROM Employees
+WHERE LOWER(JOB_ID) LIKE '%manager%';
+
+
